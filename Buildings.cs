@@ -262,7 +262,7 @@ namespace Chronicle.Facilities.Buildings
                 itm.SubItems.Add(b.Name);
                 listView1.Items.Add(itm);
 
-
+                buildings.Add(b);
             }
         }
 
