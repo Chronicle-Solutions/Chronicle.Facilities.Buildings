@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\adasn\\Source\\Repos\\Chronicle\\Chronicle.Facilities.Buildings\\Chronicle.Facilities.Buildings.csproj": {}
+    "C:\\Users\\adasn\\Desktop\\Chronicle\\Chronicle.Facilities.Buildings\\Chronicle.Facilities.Buildings.csproj": {}
   },
   "projects": {
-    "C:\\Users\\adasn\\Source\\Repos\\Chronicle\\Chronicle.Facilities.Buildings\\Chronicle.Facilities.Buildings.csproj": {
+    "C:\\Users\\adasn\\Desktop\\Chronicle\\Chronicle.Facilities.Buildings\\Chronicle.Facilities.Buildings.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\adasn\\Source\\Repos\\Chronicle\\Chronicle.Facilities.Buildings\\Chronicle.Facilities.Buildings.csproj",
+        "projectUniqueName": "C:\\Users\\adasn\\Desktop\\Chronicle\\Chronicle.Facilities.Buildings\\Chronicle.Facilities.Buildings.csproj",
         "projectName": "Chronicle.Facilities.Buildings",
-        "projectPath": "C:\\Users\\adasn\\Source\\Repos\\Chronicle\\Chronicle.Facilities.Buildings\\Chronicle.Facilities.Buildings.csproj",
+        "projectPath": "C:\\Users\\adasn\\Desktop\\Chronicle\\Chronicle.Facilities.Buildings\\Chronicle.Facilities.Buildings.csproj",
         "packagesPath": "C:\\Users\\adasn\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\adasn\\Source\\Repos\\Chronicle\\Chronicle.Facilities.Buildings\\obj\\",
+        "outputPath": "C:\\Users\\adasn\\Desktop\\Chronicle\\Chronicle.Facilities.Buildings\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -22,16 +22,21 @@
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
-          "net9.0"
+          "net8.0-windows"
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
-          "net9.0": {
-            "targetAlias": "net9.0",
-            "projectReferences": {}
+          "net8.0-windows7.0": {
+            "targetAlias": "net8.0-windows",
+            "projectReferences": {
+              "C:\\Users\\adasn\\Desktop\\Chronicle\\Chronicle\\Chronicle.csproj": {
+                "projectPath": "C:\\Users\\adasn\\Desktop\\Chronicle\\Chronicle\\Chronicle.csproj",
+                "excludeAssets": "runtime"
+              }
+            }
           }
         },
         "warningProperties": {
@@ -47,8 +52,8 @@
         "SdkAnalysisLevel": "9.0.200"
       },
       "frameworks": {
-        "net9.0": {
-          "targetAlias": "net9.0",
+        "net8.0-windows7.0": {
+          "targetAlias": "net8.0-windows",
           "imports": [
             "net461",
             "net462",
@@ -65,7 +70,93 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.203/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.201/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "C:\\Users\\adasn\\Desktop\\Chronicle\\Chronicle\\Chronicle.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\adasn\\Desktop\\Chronicle\\Chronicle\\Chronicle.csproj",
+        "projectName": "Chronicle",
+        "projectPath": "C:\\Users\\adasn\\Desktop\\Chronicle\\Chronicle\\Chronicle.csproj",
+        "packagesPath": "C:\\Users\\adasn\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\adasn\\Desktop\\Chronicle\\Chronicle\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\adasn\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net8.0-windows"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net8.0-windows7.0": {
+            "targetAlias": "net8.0-windows",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        },
+        "SdkAnalysisLevel": "9.0.200"
+      },
+      "frameworks": {
+        "net8.0-windows7.0": {
+          "targetAlias": "net8.0-windows",
+          "dependencies": {
+            "FastReport.OpenSource": {
+              "target": "Package",
+              "version": "[2025.2.0, )"
+            },
+            "FontAwesome.Sharp": {
+              "target": "Package",
+              "version": "[6.6.0, )"
+            },
+            "MySqlConnector": {
+              "target": "Package",
+              "version": "[2.4.0, )"
+            },
+            "WindowsRibbon": {
+              "target": "Package",
+              "version": "[2.16.1, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            },
+            "Microsoft.WindowsDesktop.App.WindowsForms": {
+              "privateAssets": "none"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.201/PortableRuntimeIdentifierGraph.json"
         }
       }
     }
