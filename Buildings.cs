@@ -10,19 +10,23 @@ using System.Windows.Forms;
 using MySqlConnector;
 using FontAwesome.Sharp;
 using Chronicle.Facilities.Buildings.Objects;
+using Chronicle.Utils;
 
 namespace Chronicle.Facilities.Buildings
 {
     public partial class Buildings : Form
     {
         private List<Building> buildings = new();
+        private ListViewColumnSorter lvwColumnSorter;
         public Buildings()
         {
             InitializeComponent();
             populateBuildings();
-
-            saveToolStripMenuItem.Image = IconChar.Save.ToBitmap(48, 48, Color.Black);
-            newToolStripMenuItem.Image = IconChar.File.ToBitmap(48, 48, Color.Black);
+            // Create an instance of a ListView column sorter and assign it
+            // to the ListView control.
+            lvwColumnSorter = new ListViewColumnSorter();
+            this.listView1.ListViewItemSorter = lvwColumnSorter;
+            Form1.populateMenu(menuToolStripMenuItem.DropDownItems, "/");
 
         }
 
@@ -75,7 +79,7 @@ namespace Chronicle.Facilities.Buildings
             {
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT * FROM BUILDING_HOUR_EXCEPTIONS A WHERE A.effDate >= (SELECT MAX(B.effDate) FROM BUILDING_HOUR_RULES B "+
+                cmd.CommandText = "SELECT * FROM BUILDING_HOUR_EXCEPTIONS A WHERE A.effDate >= (SELECT MAX(B.effDate) FROM BUILDING_HOUR_RULES B " +
                     "WHERE A.buildingID = B.buildingID AND B.effDate < current_timestamp) AND A.buildingID = @bID";
                 cmd.Parameters.AddWithValue("@bID", b.BuildingID);
                 MySqlDataReader reader = cmd.ExecuteReader();
@@ -95,7 +99,7 @@ namespace Chronicle.Facilities.Buildings
                 }
 
             }
-                return buildingHourExceptions;
+            return buildingHourExceptions;
         }
 
         private IEnumerable<BuildingHours> getBuildingHours(Building b)
@@ -179,29 +183,6 @@ namespace Chronicle.Facilities.Buildings
 
         }
 
-        private void saveToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            if (propertyGrid1.SelectedObject is not Building b) return;
-
-
-            if (b.buildingID == 0) insertBuilding(b);
-            else updateBuilding(b);
-
-
-
-            foreach (BuildingHours bh in b.buildingHours)
-            {
-                if (bh.BuildingHourRuleID == 0) insertBuildingHours(bh, b);
-                else updateBuildingHours(bh, b);
-            }
-
-            foreach (BuildingHourException bh in b.buildingHourExceptions)
-            {
-                if (bh.BuildingHourExceptionID == 0) insertBuildingHourException(bh, b);
-                else updateBuildingHourException(bh, b);
-            }
-        }
-
         private void insertBuildingHourException(BuildingHourException bh, Building b)
         {
             using (MySqlConnection conn = new MySqlConnection(Globals.ConnectionString))
@@ -217,7 +198,7 @@ namespace Chronicle.Facilities.Buildings
                 bh.BuildingHourExceptionID = (int)cmd.LastInsertedId;
             }
         }
-            
+
 
         private void updateBuildingHourException(BuildingHourException bh, Building b)
         {
@@ -278,7 +259,7 @@ namespace Chronicle.Facilities.Buildings
                     "VALUES (@bID, @effDate, @oM, @cM, @oT, @cT, @oW, @cW, @oR, @cR, @oF, @cF, @oA, @cA, @oS, @cS);";
                 cmd.Parameters.AddWithValue("@bID", b.BuildingID);
                 cmd.Parameters.AddWithValue("@effDate", bh.effectiveDate);
-                cmd.Parameters.AddWithValue("@oM", bh.Monday.BuildingClosed? null : bh.Monday.openTime);
+                cmd.Parameters.AddWithValue("@oM", bh.Monday.BuildingClosed ? null : bh.Monday.openTime);
                 cmd.Parameters.AddWithValue("@cM", bh.Monday.BuildingClosed ? null : bh.Monday.closeTime);
                 cmd.Parameters.AddWithValue("@oT", bh.Tuesday.BuildingClosed ? null : bh.Tuesday.openTime);
                 cmd.Parameters.AddWithValue("@cT", bh.Tuesday.BuildingClosed ? null : bh.Tuesday.openTime);
@@ -359,24 +340,71 @@ namespace Chronicle.Facilities.Buildings
             }
         }
 
-        private void newToolStripMenuItem_Click(object sender, EventArgs e)
+
+        private void saveToolStripMenuItem_Click_1(object sender, EventArgs e)
+        {
+            if (propertyGrid1.SelectedObject is not Building b) return;
+
+
+            if (b.buildingID == 0) insertBuilding(b);
+            else updateBuilding(b);
+
+
+
+            foreach (BuildingHours bh in b.buildingHours)
+            {
+                if (bh.BuildingHourRuleID == 0) insertBuildingHours(bh, b);
+                else updateBuildingHours(bh, b);
+            }
+
+            foreach (BuildingHourException bh in b.buildingHourExceptions)
+            {
+                if (bh.BuildingHourExceptionID == 0) insertBuildingHourException(bh, b);
+                else updateBuildingHourException(bh, b);
+            }
+        }
+
+        private void newToolStripMenuItem_Click_1(object sender, EventArgs e)
         {
             Building b = new();
             propertyGrid1.SelectedObject = b;
         }
-    }
 
-    public static class TypeConverter<T>
-    {
-        public static T getData(MySqlDataReader reader, string columnName, T defaultRet)
+        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            object data = reader[columnName];
-            if (data is not T tData)
+            this.Close();
+            if (Application.OpenForms.Count > 0)
             {
-                return defaultRet;
+                Application.Exit();
+            }
+        }
+
+        private void listView1_ColumnClick(object sender, ColumnClickEventArgs e)
+        {
+            // Determine if clicked column is already the column that is being sorted.
+            if (e.Column == lvwColumnSorter.SortColumn)
+            {
+                // Reverse the current sort direction for this column.
+                if (lvwColumnSorter.Order == SortOrder.Ascending)
+                {
+                    lvwColumnSorter.Order = SortOrder.Descending;
+                }
+                else
+                {
+                    lvwColumnSorter.Order = SortOrder.Ascending;
+                }
+            }
+            else
+            {
+                // Set the column number that is to be sorted; default to ascending.
+                lvwColumnSorter.SortColumn = e.Column;
+                lvwColumnSorter.Order = SortOrder.Ascending;
             }
 
-            return tData;
+            // Perform the sort with these new sort options.
+            this.listView1.Sort();
         }
     }
+
+    
 }
