@@ -11,8 +11,20 @@ namespace Chronicle.Facilities.Buildings.Objects
 {
     public class Building
     {
-        [Category("Identification")]
-        [DisplayName("Building ID")]
+        [Category("Audit")]
+        [DisplayName("Added By")]
+        [Description("The OperatorID of the user who created this object")]
+        [ReadOnly(true)]
+        public string addedBy { get; set; }
+        [Category("Audit")]
+        [DisplayName("Last Updated By")]
+        [Description("The OperatorID of the user who last updated this object")]
+        [ReadOnly(true)]
+        public string updatedBy { get; set; }
+
+
+        [Category("Audit")]
+        [DisplayName("Object ID")]
         [Description("Building Unique Internal Identifier")]
         public int BuildingID { get => buildingID; }
 

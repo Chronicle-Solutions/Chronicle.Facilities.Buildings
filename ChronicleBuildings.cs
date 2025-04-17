@@ -15,6 +15,7 @@ namespace Chronicle.Facilities.Buildings
         {
             Buildings b = new Buildings();
             b.Show();
+            b.loadData();
             return 0;
         }
     }

@@ -16,22 +16,18 @@ namespace Chronicle.Facilities.Buildings
 {
     public partial class Buildings : Form
     {
-        private List<Building> buildings = new();
         private ListViewColumnSorter lvwColumnSorter;
         public Buildings()
         {
             InitializeComponent();
-            populateBuildings();
-            // Create an instance of a ListView column sorter and assign it
-            // to the ListView control.
-            lvwColumnSorter = new ListViewColumnSorter();
-            this.listView1.ListViewItemSorter = lvwColumnSorter;
-            Form1.populateMenu(menuToolStripMenuItem.DropDownItems, "/");
+
+            toolStripStatusLabel1.Text = "Loading Data";
 
         }
 
         private void populateBuildings()
         {
+            SuspendLayout();
             using (MySqlConnection conn = new MySqlConnection(Globals.ConnectionString))
             {
                 conn.Open();
@@ -40,25 +36,12 @@ namespace Chronicle.Facilities.Buildings
                 MySqlDataReader reader = cmd.ExecuteReader();
                 while (reader.Read())
                 {
-                    Building b = new Building();
-                    b.buildingID = reader.GetInt32("buildingID");
-                    b.Name = TypeConverter<string>.getData(reader, "buildingName", "");
-                    b.BuildingCode = TypeConverter<string>.getData(reader, "buildingCode", "");
-                    b.Notes = TypeConverter<string>.getData(reader, "buildingNotes", "");
-                    b.URL = TypeConverter<string>.getData(reader, "buildingURL", "");
-                    b.Location = TypeConverter<string>.getData(reader, "buildingAddress", "");
-                    b.Coordinates.Latitude = TypeConverter<float>.getData(reader, "buildingLat", 0f);
-                    b.Coordinates.Longitude = TypeConverter<float>.getData(reader, "buildingLong", 0f);
-                    b.Timezone = TypeConverter<string>.getData(reader, "buildingTimezone", "");
-                    b.active = reader.GetBoolean("active");
-                    buildings.Add(b);
-                    b.buildingHours.AddRange(getBuildingHours(b));
-                    b.buildingHourExceptions.AddRange(getBuildingHourExceptions(b));
+
                     ListViewItem itm = new();
-                    itm.Text = b.buildingID.ToString();
-                    itm.SubItems.Add(b.BuildingCode);
-                    itm.SubItems.Add(b.Name);
-                    if (!b.active)
+                    itm.Text = reader.GetInt32("buildingID").ToString();
+                    itm.SubItems.Add(TypeConverter<string>.getData(reader, "buildingCode", ""));
+                    itm.SubItems.Add(TypeConverter<string>.getData(reader, "buildingName", ""));
+                    if (!reader.GetBoolean("active"))
                     {
                         itm.ForeColor = Color.Red;
                         itm.Font = new Font(itm.Font.FontFamily, itm.Font.Size, FontStyle.Italic);
@@ -70,6 +53,8 @@ namespace Chronicle.Facilities.Buildings
 
 
             }
+            ResumeLayout(true);
+            PerformLayout();
         }
 
         private IEnumerable<BuildingHourException> getBuildingHourExceptions(Building b)
@@ -178,8 +163,31 @@ namespace Chronicle.Facilities.Buildings
                 propertyGrid1.SelectedObject = null;
                 return;
             }
-            int index = listView1.SelectedIndices[0];
-            propertyGrid1.SelectedObject = buildings[index];
+            int index = Int32.Parse(listView1.SelectedItems[0].Text);
+            using (MySqlConnection conn = new MySqlConnection(Globals.ConnectionString))
+            {
+                conn.Open();
+                MySqlCommand cmd = conn.CreateCommand();
+                cmd.CommandText = "SELECT * FROM BUILDINGS WHERE buildingID = @bID";
+                cmd.Parameters.AddWithValue("@bID", index);
+                MySqlDataReader reader = cmd.ExecuteReader();
+                reader.Read();
+
+                Building b = new Building();
+                b.buildingID = reader.GetInt32("buildingID");
+                b.Name = TypeConverter<string>.getData(reader, "buildingName", "");
+                b.BuildingCode = TypeConverter<string>.getData(reader, "buildingCode", "");
+                b.Notes = TypeConverter<string>.getData(reader, "buildingNotes", "");
+                b.URL = TypeConverter<string>.getData(reader, "buildingURL", "");
+                b.Location = TypeConverter<string>.getData(reader, "buildingAddress", "");
+                b.Coordinates.Latitude = TypeConverter<float>.getData(reader, "buildingLat", 0f);
+                b.Coordinates.Longitude = TypeConverter<float>.getData(reader, "buildingLong", 0f);
+                b.Timezone = TypeConverter<string>.getData(reader, "buildingTimezone", "");
+                b.active = reader.GetBoolean("active");
+                b.buildingHours.AddRange(getBuildingHours(b));
+                b.buildingHourExceptions.AddRange(getBuildingHourExceptions(b));
+                propertyGrid1.SelectedObject = b;
+            }
 
         }
 
@@ -237,13 +245,18 @@ namespace Chronicle.Facilities.Buildings
                 cmd.ExecuteNonQuery();
                 b.buildingID = (int)cmd.LastInsertedId;
                 propertyGrid1.Refresh();
+                
                 ListViewItem itm = new();
                 itm.Text = b.buildingID.ToString();
                 itm.SubItems.Add(b.BuildingCode);
                 itm.SubItems.Add(b.Name);
+                if (!b.active)
+                {
+                    itm.ForeColor = Color.Red;
+                    itm.Font = new Font(itm.Font.FontFamily, itm.Font.Size, FontStyle.Italic);
+                }
                 listView1.Items.Add(itm);
 
-                buildings.Add(b);
             }
         }
 
@@ -335,8 +348,15 @@ namespace Chronicle.Facilities.Buildings
                 cmd.Parameters.AddWithValue("@active", b.active);
                 cmd.ExecuteNonQuery();
                 propertyGrid1.Refresh();
-                listView1.Items.Clear();
-                populateBuildings();
+                ListViewItem itm = listView1.SelectedItems[0];
+                itm.Text = b.buildingID.ToString();
+                itm.SubItems.Add(b.BuildingCode);
+                itm.SubItems.Add(b.Name);
+                if (!b.active)
+                {
+                    itm.ForeColor = Color.Red;
+                    itm.Font = new Font(itm.Font.FontFamily, itm.Font.Size, FontStyle.Italic);
+                }
             }
         }
 
@@ -344,6 +364,8 @@ namespace Chronicle.Facilities.Buildings
         private void saveToolStripMenuItem_Click_1(object sender, EventArgs e)
         {
             if (propertyGrid1.SelectedObject is not Building b) return;
+
+            toolStripStatusLabel1.Text = "Saving - Please Wait.";
 
 
             if (b.buildingID == 0) insertBuilding(b);
@@ -362,6 +384,7 @@ namespace Chronicle.Facilities.Buildings
                 if (bh.BuildingHourExceptionID == 0) insertBuildingHourException(bh, b);
                 else updateBuildingHourException(bh, b);
             }
+            toolStripStatusLabel1.Text = "Ready";
         }
 
         private void newToolStripMenuItem_Click_1(object sender, EventArgs e)
@@ -404,7 +427,40 @@ namespace Chronicle.Facilities.Buildings
             // Perform the sort with these new sort options.
             this.listView1.Sort();
         }
+
+        public void loadData()
+        {
+            populateBuildings();
+            // Create an instance of a ListView column sorter and assign it
+            // to the ListView control.
+            lvwColumnSorter = new ListViewColumnSorter();
+            this.listView1.ListViewItemSorter = lvwColumnSorter;
+            Form1.populateMenu(menuToolStripMenuItem.DropDownItems, "/");
+            toolStripStatusLabel1.Text = "Ready";
+        }
+
+        private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (propertyGrid1.SelectedObject is not Building b) return;
+
+            toolStripStatusLabel1.Text = "Saving - Please Wait.";
+
+            insertBuilding(b);
+
+
+            foreach (BuildingHours bh in b.buildingHours)
+            {   
+                insertBuildingHours(bh, b);
+                
+            }
+
+            foreach (BuildingHourException bh in b.buildingHourExceptions)
+            {
+                insertBuildingHourException(bh, b);
+            }
+            toolStripStatusLabel1.Text = "Ready";
+        }
     }
 
-    
+
 }
