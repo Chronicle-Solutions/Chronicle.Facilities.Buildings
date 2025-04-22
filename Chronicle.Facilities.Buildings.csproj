@@ -18,5 +18,8 @@
 	    <SubType>Form</SubType>
 	  </Compile>
 	</ItemGroup>
+	<PropertyGroup>
+		<PostBuildEvent>"$(SolutionDir)build.py"</PostBuildEvent>
+	</PropertyGroup>
 
 </Project>
