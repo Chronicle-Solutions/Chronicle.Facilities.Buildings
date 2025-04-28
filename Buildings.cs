@@ -435,7 +435,7 @@ namespace Chronicle.Facilities.Buildings
             // to the ListView control.
             lvwColumnSorter = new ListViewColumnSorter();
             this.listView1.ListViewItemSorter = lvwColumnSorter;
-            Form1.populateMenu(menuToolStripMenuItem.DropDownItems, "/");
+            MenuUtils.populateMenu(menuToolStripMenuItem.DropDownItems, "/");
             toolStripStatusLabel1.Text = "Ready";
         }
 
