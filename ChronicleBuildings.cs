@@ -5,13 +5,13 @@ namespace Chronicle.Facilities.Buildings
 
     public class ChronicleBuildings : IPlugable
     {
-        public string PluginName { get => "Chronicle Building Management"; }
-        public string PluginDescription { get => "Building Management for Facilities"; }
-        public  Version Version { get => new Version(0,0,0,1); }
+        public override string PluginName { get => "Chronicle Building Management"; }
+        public override string PluginDescription { get => "Building Management for Facilities"; }
+        public override Version Version { get => new Version(0,0,0,1); }
 
 
 
-        public int Execute()
+        public override int Execute()
         {
             Buildings b = new Buildings();
             b.Show();

@@ -15,12 +15,12 @@ namespace Chronicle.Facilities.Buildings.Objects
         [DisplayName("Added By")]
         [Description("The OperatorID of the user who created this object")]
         [ReadOnly(true)]
-        public string addedBy { get; set; }
+        public string? addedBy { get; set; }
         [Category("Audit")]
         [DisplayName("Last Updated By")]
         [Description("The OperatorID of the user who last updated this object")]
         [ReadOnly(true)]
-        public string updatedBy { get; set; }
+        public string? updatedBy { get; set; }
 
 
         [Category("Audit")]
@@ -35,23 +35,23 @@ namespace Chronicle.Facilities.Buildings.Objects
         [Category("Identification")]
         [DisplayName("Building Name")]
         [Description("The name of the building.")]
-        public string Name { get; set; }
+        public string? Name { get; set; }
 
         [Category("Identification")]
         [DisplayName("Building Code")]
         [Description("Short Code to identify building")]
-        public string BuildingCode { get; set; }
+        public string? BuildingCode { get; set; }
 
         [Category("General Information")]
         [DisplayName("Notes")]
         [Description("Notes about the building")]
         [Editor(typeof(MultilineStringEditor), typeof(UITypeEditor))]
-        public string Notes { get; set; }
+        public string? Notes { get; set; }
 
         [Category("General Information")]
         [DisplayName("URL")]
         [Description("Building Web Page")]
-        public string URL { get; set; }
+        public string? URL { get; set; }
 
         [Category("General Information")]
         [DisplayName("Active")]
@@ -60,7 +60,7 @@ namespace Chronicle.Facilities.Buildings.Objects
         [Category("Location")]
         [DisplayName("Address")]
         [Description("Physical Address of the Building")]
-        public string Location { get; set; }
+        public string? Location { get; set; }
 
         [Category("Location")]
         [Description("The coordinates of the building.")]

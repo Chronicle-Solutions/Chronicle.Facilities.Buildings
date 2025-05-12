@@ -22,6 +22,8 @@ namespace Chronicle.Facilities.Buildings
             InitializeComponent();
 
             toolStripStatusLabel1.Text = "Loading Data";
+            lvwColumnSorter = new ListViewColumnSorter();
+            this.listView1.ListViewItemSorter = lvwColumnSorter;
 
         }
 
@@ -433,8 +435,7 @@ namespace Chronicle.Facilities.Buildings
             populateBuildings();
             // Create an instance of a ListView column sorter and assign it
             // to the ListView control.
-            lvwColumnSorter = new ListViewColumnSorter();
-            this.listView1.ListViewItemSorter = lvwColumnSorter;
+            
             toolStripStatusLabel1.Text = "Ready";
         }
 

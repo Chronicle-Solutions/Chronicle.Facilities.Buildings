@@ -19,7 +19,7 @@ namespace Chronicle.Facilities.Buildings.Objects
             return false;
         }
 
-        protected override CollectionForm CreateCollectionForm()
+        protected override CollectionForm? CreateCollectionForm()
         {
             CollectionForm form = base.CreateCollectionForm();
 
